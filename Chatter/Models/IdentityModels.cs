@@ -45,5 +45,7 @@ namespace Chatter.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<Chatter.Models.Chat> Chats { get; set; }
     }
 }
