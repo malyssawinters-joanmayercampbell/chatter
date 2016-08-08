@@ -54,10 +54,10 @@ namespace Chatter.Migrations
             context.Chats.AddOrUpdate(p => p.ChatID,
             new Chat
             {
-              ApplicationUser = Bob,
-              Message ="Test 1",
-              TimeStamp = DateTime.Now,
+                ApplicationUser = Bob,
+                Message = "Test 1",
+                TimeStamp = DateTime.Now,
             });
-            }
+        }
     } 
 }
