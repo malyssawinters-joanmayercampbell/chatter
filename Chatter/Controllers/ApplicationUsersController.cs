@@ -28,6 +28,28 @@ namespace Chatter.Controllers
             return View(db.Users.ToList());
         }
 
+
+        public ActionResult RemoveFollower(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var followingUser = db.Users.Single(u => u.Id == id);
+            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            var CurrentUser = UserManager.FindById(User.Identity.GetUserId());
+            if (CurrentUser.Following.Contains(followingUser))
+            {
+                CurrentUser.Following.Remove(followingUser);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View();
+        }
+
+
         public ActionResult AddFollower (string id)
         {
             if (id == null)

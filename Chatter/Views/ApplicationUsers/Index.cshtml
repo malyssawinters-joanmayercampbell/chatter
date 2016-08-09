@@ -27,21 +27,44 @@
             if (ViewBag.currentUser.UserName != item.UserName)
             {
                 <tr>
-                    <td>
-                        <a href="@Url.Action("AddFollower", new { id = item.Id })">
-                            @if (ViewBag.followingUsers.Contains(item.UserName))
-                            {
-                                <span class="glyphicon glyphicon-check"></span>
-                            }
-                            else
-                            {
-                                <span class="glyphicon glyphicon-unchecked"></span>
-                            }
-                        </a>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UserName)
-                    </td>
+                    @if (ViewBag.followingUsers.Contains(item.UserName))
+                    {
+                        <td>
+
+                            <a href="@Url.Action("RemoveFollower", new { id = item.Id })">
+                                @if (ViewBag.followingUsers.Contains(item.UserName))
+                                {
+                                    <span class="glyphicon glyphicon-check"></span>
+                                }
+                                else
+                                {
+                                    <span class="glyphicon glyphicon-unchecked"></span>
+                                }
+                            </a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserName)
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+
+                            <a href="@Url.Action("AddFollower", new { id = item.Id })">
+                                @if (ViewBag.followingUsers.Contains(item.UserName))
+                                {
+                                    <span class="glyphicon glyphicon-check"></span>
+                                }
+                                else
+                                {
+                                    <span class="glyphicon glyphicon-unchecked"></span>
+                                }
+                            </a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserName)
+                        </td>
+                    }
                 </tr>
             }
 
