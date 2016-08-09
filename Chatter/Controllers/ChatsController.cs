@@ -7,6 +7,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Chatter.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Chatter.Controllers
 {
@@ -48,9 +50,13 @@ namespace Chatter.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ChatID,Message")] Chat chat)
         {
+            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            var CurrentUser = UserManager.FindById(User.Identity.GetUserId());
+
             if (ModelState.IsValid)
             {
                 chat.TimeStamp = DateTime.Now;
+                chat.ApplicationUser = CurrentUser;
                 db.Chats.Add(chat);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -71,7 +77,10 @@ namespace Chatter.Controllers
             {
                 return HttpNotFound();
             }
+
+
             return View(chat);
+            
         }
 
         // POST: Chats/Edit/5
