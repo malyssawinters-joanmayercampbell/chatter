@@ -7,6 +7,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Chatter.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Chatter.Controllers
 {
@@ -17,7 +19,33 @@ namespace Chatter.Controllers
         // GET: ApplicationUsers
         public ActionResult Index()
         {
+            string currentUserId = User.Identity.GetUserId();
+            ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+
+            ViewBag.currentUser = currentUser;
+            ViewBag.followingUsers = (from user in currentUser.Following
+                                     select user.UserName).ToList();
             return View(db.Users.ToList());
+        }
+
+        public ActionResult AddFollower (string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            
+            var followingUser = db.Users.Single(u => u.Id == id);
+            UserManager<ApplicationUser> UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            var CurrentUser = UserManager.FindById(User.Identity.GetUserId());
+            if (!CurrentUser.Following.Contains(followingUser))
+            {
+                CurrentUser.Following.Add(followingUser);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View();
         }
 
         // GET: ApplicationUsers/Details/5
